@@ -1,13 +1,13 @@
 # Checkers
 Beginner C++ console checkers game
 
-Description:
-    This application allows two players to player checkers against eacher other. The project is meant for novice programmers as this is my first project on github. Any criticism is appreciated! Up to and including advising me to quit pursing porgramming.
+##Description
+	This application allows two players to player checkers against eacher other. The project is meant for novice programmers as this is my first project on github. Any criticism is appreciated! Up to and including advising me to quit pursing porgramming.
   
-Planned Features:
-    AI: I plan to implement a variation of the MiniMax algorithm for the AI.
+##Planned Features
+	AI: I plan to implement a variation of the MiniMax algorithm for the AI.
     
-#Project Files:
+##Project Files:
 
     Checkers.cpp:
         Defines the entry point for the application.

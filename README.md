@@ -37,7 +37,7 @@ Planned Features:
     Extras.cpp:
         ResetBoard() - Sets the board to initial values, black on top, and white on bottom. (No pun intended)
         PrintHeader() - Prints the program's header from Banner.txt
-        PrintBoard - Prints the board and sets pieces.
+        PrintBoard() - Prints the board and sets pieces.
         
     stdafx.h:
         Include file for standard system include files or project specific include files.

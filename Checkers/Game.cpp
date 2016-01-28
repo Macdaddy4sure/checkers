@@ -46,6 +46,45 @@ int CheckWinner()
 		return 3; // No winner
 }
 
+// A piece has been captured, remove the piece from the board and increment the correct Captured[]
+void CapturePiece(int PlayerPiece, int Square[])
+{
+	// Find the difference between source and destination
+	// if source - destination == 2 ?
+	// if destination - source == 2 ?
+	_Board[Square[0]][Square[1]] = blank_square;
+	++Captured[PlayerPiece];
+}
+
+// Remove the old piece and place the piece in the new square
+void MovePiece(int Source[], int Destination[])
+{
+	int temp = _Board[Source[0]][Source[1]];
+	_Board[Source[0]][Source[1]] = 0;
+	_Board[Destination[0]][Destination[1]] = temp;
+}
+
+void KingMe(int PlayerPiece, int Square[])
+{
+	// Change the checker to a king if the piece is not already a king
+	if (PlayerPiece == black)
+	{
+		if (Square[0] == 7)
+		{
+			if (_Board[Square[0]][Square[1]] == black_checker)
+				_Board[Square[0]][Square[1]] = black_king;
+		}
+	}
+	else
+	{
+		if (Square[0] == 0)
+		{
+			if (_Board[Square[0]][Square[1]] == white_checker)
+				_Board[Square[0]][Square[1]] = white_king;
+		}
+	}
+}
+
 bool ForceCaptureScan(int player)
 {
 	// Scan all possible player moves to determine if a capture is possible
@@ -161,22 +200,6 @@ bool ForceCaptureScan(int player)
 	return false;
 }
 
-// A piece has been captured, remove the piece from the board and increment the correct Captured[]
-void CapturePiece(int Player, int Square[])
-{
-	// Remove the old piece
-	_Board[Square[0]][Square[1]] = 0;
-	++Captured[Player];
-}
-
-// Remove the old piece and place the piece in the new square
-void MovePiece(int Source[], int Destination[])
-{
-	int temp = _Board[Source[0]][Source[1]];
-	_Board[Source[0]][Source[1]] = 0;
-	_Board[Destination[0]][Destination[1]] = temp;
-}
-
 bool DoubleJump(int Square[])
 {
 	// If there is an enemy checker adjacent to the source square
@@ -284,8 +307,9 @@ bool DoubleJump(int Square[])
 	return:
 		the move is valid:		true
 		the move is not valid:	false
+		Double jump possible:	2
 */
-bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
+int ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 {
 	// Black checkers can move to (x + 1), (y +/- 1)
 	// Black kings can move to (x +/- 1), (y +/- 1)
@@ -313,12 +337,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else if (Source[1] == (Destination[1] - 1))
@@ -328,19 +352,19 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
 							{
 								cout << "You have selected an invalid destination square..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// The player is attempting to capture a checker, ensure there is a piece +/- 1 of the destination
@@ -362,19 +386,16 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 									// Can the player double jump?
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 								else
 								{
 									cout << "Do you doubt your checkers? You are trying to capture your own piece..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 							}
 							// Is the player capturing to the left?
@@ -391,33 +412,30 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 								else
 								{
 									cout << "You are trying to capture your own piece or a piece that does not exist..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 							}
 							else
 							{
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						else
 						{
 							cout << "That is an invalid move..." << endl;
 							system("pause");
-							return false;
+							return 0;
 						}
 						break;
 					}
@@ -425,14 +443,14 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 					{
 						cout << "Only one checker per square please!" << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (black_king) :
 					{
 						cout << "Only one checker per square please!" << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (white_checker) :
@@ -440,7 +458,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 						cout << "If you are attempting to capture an enemy checker, move to the square that is behind the enemy. :)" << endl;
 						cout << "Only one checker per square pleae..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (white_king) :
@@ -448,7 +466,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 						cout << "If you are attempting to caputre an enemy checker, move to the square that is behind the enemy. :)" << endl;
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					default :
@@ -476,12 +494,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							// Is the player moving to the right?
@@ -492,19 +510,19 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
 							{
 								cout << "You are moving too far away..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to move up?
@@ -518,12 +536,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else if ((Source[1] - 1) == Destination[1])
@@ -533,19 +551,19 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
 							{
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to capture a piece downwards?
@@ -567,13 +585,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else if ((Source[1] - 2) == Destination[1])
@@ -591,13 +606,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else
@@ -605,7 +617,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								// The player is attempting to capture a piece that is greater than two squares from the source...
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to capture a piece upwards?
@@ -627,13 +639,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							// Capture to the left?
@@ -652,13 +661,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == black)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else
@@ -666,14 +672,14 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								// The player is attempting to capture a piece that is greater than two sqaures from the source...
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						else
 						{
 							cout << "You have selected an invalid destination square..." << endl;
 							system("pause");
-							return false;
+							return 0;
 						}
 						break;
 					}
@@ -681,14 +687,14 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 					{
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (black_king) :
 					{
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (white_checker) :
@@ -696,7 +702,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 						cout << "If you are attempting to capture an enemy checker, move to the square that is behind the enemy. :)" << endl;
 						cout << "Only one checker per square pleae..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					case (white_king) :
@@ -704,14 +710,14 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 						cout << "If you are attempting to capture an enemy checker, move to the square that is behind the enemy. :)" << endl;
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 					default :
 					{
 						cout << "There was an unspecified error..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					}
 				}
@@ -722,21 +728,21 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 			{
 				cout << "That is not your piece!" << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 			}
 			case (blank_square) :
 			{
 				cout << "One cannot move a piece that does not exist..." << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 			}
 			default :
 			{
 				cout << "There was an unspecified error..." << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 			}
 		}
@@ -764,12 +770,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							// Is the player moving to the left?
@@ -780,12 +786,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
@@ -793,7 +799,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								// This is an error...
 								cout << "You have made an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Test if the destination square is -2 from the source square, they are trying to capture
@@ -815,19 +821,16 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 								else
 								{
 									cout << "This is an invalid move..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 							}
 							// Is he capturing to the left?
@@ -846,33 +849,30 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 								else
 								{
 									cout << "You tried to capture a piece that does not exist or you are trying to capture your own piece..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 							}
 							else
 							{
 								cout << "This is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						else
 						{
 							cout << "This is an invalid move..." << endl;
 							system("pause");
-							return false;
+							return 0;
 						}
 						break;
 					}
@@ -880,13 +880,13 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 					case (black_king) :
 						cout << "If you are trying to capture a checker, move chose the square that is behind the current square..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					case (white_checker) :
 					case (white_king) :
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					default :
 						break;
@@ -911,12 +911,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							// Is the player moving to the right?
@@ -927,19 +927,19 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
 							{
 								cout << "You are moving too far away..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to move up?
@@ -953,12 +953,12 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else if ((Source[1] - 1) == Destination[1])
@@ -968,19 +968,19 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								{
 									cout << "Force Capture has been turned on and a capture is possible..." << endl;
 									system("pause");
-									return false;
+									return 0;
 								}
 								else
 								{
 									MovePiece(Source, Destination);
-									return true;
+									return 1;
 								}
 							}
 							else
 							{
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to capture a piece downwards?
@@ -991,7 +991,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 							{
 								// The player is attempting to capture a piece to the right.
 								// Is there a piece for the player to capture?
-								if (_Board[Source[0] + 1][Source[1] + 1] == white_checker || _Board[Source[0] + 1][Source[1] + 1] == white_king)
+								if (_Board[Source[0] + 1][Source[1] + 1] == black_checker || _Board[Source[0] + 1][Source[1] + 1] == black_king)
 								{
 									// An enemy piece has been captured, remove the captured piece from the board
 									int Square[2] = { Source[0] + 1, Source[1] + 1 };
@@ -1002,20 +1002,17 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else if ((Source[1] - 2) == Destination[1])
 							{
 								// The player is attempting to capture a piece to the left
 								// Is there a piece for the player to capture?
-								if (_Board[Source[0] + 1][Source[1] - 1] == white_checker || _Board[Source[0] + 1][Source[1] - 1] == white_king)
+								if (_Board[Source[0] + 1][Source[1] - 1] == black_checker || _Board[Source[0] + 1][Source[1] - 1] == black_king)
 								{
 									// An enemy piece has been captured, remove the captured piece from the board
 									int Square[2] = { Source[0] + 1, Source[1] + 1 };
@@ -1026,13 +1023,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else
@@ -1040,7 +1034,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								// The player is attempting to capture a piece that is greater than two squares from the source...
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						// Is the player attempting to capture a piece upwards?
@@ -1051,7 +1045,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 							{
 								// Player is capturing a piece up and to the right
 								// Is there a piece for the player to capture?
-								if (_Board[Source[0] - 1][Source[1] + 1] == white_checker || _Board[Source[0] - 1][Source[1] + 1] == white_king)
+								if (_Board[Source[0] - 1][Source[1] + 1] == black_checker || _Board[Source[0] - 1][Source[1] + 1] == black_king)
 								{
 									// An enemy piece has been captured, remove the captured piece from the board
 									int Square[2] = { Source[0] - 1, Source[1] + 1 };
@@ -1062,13 +1056,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							// Capture to the left?
@@ -1076,7 +1067,7 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 							{
 								// Player is capturing a piece up and to the left
 								// Is there a piece for the player to capture?
-								if (_Board[Source[0] - 1][Source[1] - 1] == white_checker || _Board[Source[0] - 1][Source[1] - 1] == white_king)
+								if (_Board[Source[0] - 1][Source[1] - 1] == black_checker || _Board[Source[0] - 1][Source[1] - 1] == black_king)
 								{
 									// An enemy piece has been captured, remove the captured piece from the board
 									int Square[2] = { Source[0] - 1, Source[1] - 1 };
@@ -1087,13 +1078,10 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 
 									if (DoubleJump(Destination))
 									{
-										if (Player == white)
-											Player1(Player);
-										else
-											Player2(Player);
+										return 2;
 									}
 									else
-										return true;
+										return 1;
 								}
 							}
 							else
@@ -1101,14 +1089,14 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 								// The player is attempting to capture a piece that is greater than two sqaures from the source...
 								cout << "That is an invalid move..." << endl;
 								system("pause");
-								return false;
+								return 0;
 							}
 						}
 						else
 						{
 							cout << "You have selected an invalid destination square..." << endl;
 							system("pause");
-							return false;
+							return 0;
 						}
 						break;
 					}
@@ -1116,13 +1104,13 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 					case (black_king) :
 						cout << "If you are trying to capture a checker, move chose the square that is behind the current square..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					case (white_checker) :
 					case (white_king) :
 						cout << "Only one checker per square please..." << endl;
 						system("pause");
-						return false;
+						return 0;
 						break;
 					default:
 						break;
@@ -1133,21 +1121,21 @@ bool ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 			case (black_king) :
 				cout << "That is not your piece!" << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 			case (blank_square) :
 				cout << "One cannot move a piece that does not exist..." << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 			default :
 				cout << "There was an unspecified error..." << endl;
 				system("pause");
-				return false;
+				return 0;
 				break;
 		}
 	}
-	return false;
+	return 0;
 }
 
 bool CordinateInput(string test, int *SquarePointer)
@@ -1191,7 +1179,8 @@ void Player1(int Player)
 	int Destination[2] = { 0, 0 };
 	int *DestinationPointer = Destination;
 	int PlayerPiece;
-	bool Capture;
+	bool Capture = false;
+	bool *CapturePointer = &Capture;
 	string input;
 
 	system("cls");
@@ -1227,7 +1216,8 @@ void Player1(int Player)
 			getline(cin, input);
 		} while (!CordinateInput(input, DestinationPointer));
 
-	} while (!ValidMove(Player, PlayerPiece, Source, Destination));
+	} while (ValidMove(Player, PlayerPiece, Source, Destination) != 1);
+	KingMe(PlayerPiece, Destination);
 }
 
 void Player2(int Player)
@@ -1272,5 +1262,6 @@ void Player2(int Player)
 			getline(cin, input);
 		} while (!CordinateInput(input, DestinationPointer));
 
-	} while (!ValidMove(Player, PlayerPiece, Source, Destination));
+	} while (ValidMove(Player, PlayerPiece, Source, Destination) != 1);
+	KingMe(PlayerPiece, Destination);
 }

@@ -375,7 +375,7 @@ int ValidMove(int Player, int PlayerPiece, int Source[], int Destination[])
 							if ((Source[1] - 2) == Destination[1])
 							{
 								// Ensure the square that is + 1 of Source[1] is an enemy checker
-								if (_Board[Source[0] + 1][Source[1] - 1] == white_checker || _Board[Source[0] + 1][Source[1] + 1] == white_king)
+								if (_Board[Source[0] + 1][Source[1] - 1] == white_checker || _Board[Source[0] + 1][Source[1] - 1] == white_king)
 								{
 									// An enemy piece has been captured, remove the captured piece from the board
 									int Square[2] = {Source[0] + 1, Source[1] - 1};
@@ -1180,11 +1180,6 @@ void Player1(int Player)
 	int Destination[2] = { 0, 0 };
 	int *DestinationPointer = Destination;
 	int PlayerPiece;
-<<<<<<< HEAD
-=======
-	bool Capture = false;
-	bool *CapturePointer = &Capture;
->>>>>>> origin/master
 	string input;
 
 	if (Player == black)
@@ -1264,8 +1259,4 @@ void Player2(int Player)
 
 	} while (ValidMove(Player, PlayerPiece, Source, Destination) != 1);
 	KingMe(PlayerPiece, Destination);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/master

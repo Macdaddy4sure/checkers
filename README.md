@@ -30,11 +30,13 @@ AI: I plan to implement a variation of the MiniMax algorithm for the AI.
             Player2() - Invoked when it is Player 2's turn.
             
     AI.cpp:
-        This function is merely a stub for a new feature.
+        This file is merely a stub for a new feature coming in v2.0.
         Functions:
             AI() - Will be invoked when it is the AI's turn, but for now serves as a stub.
             
     Extras.cpp:
+      This file is home to extra functions
+      Functions:
         ResetBoard() - Sets the board to initial values, black on top, and white on bottom. (No pun intended)
         PrintHeader() - Prints the program's header from Banner.txt
         PrintBoard() - Prints the board and sets pieces.

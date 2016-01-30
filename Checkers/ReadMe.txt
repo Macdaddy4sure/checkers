@@ -1,40 +1,10 @@
-========================================================================
-    CONSOLE APPLICATION : Checkers Project Overview
-========================================================================
+Welcome to my project!
 
-AppWizard has created this Checkers application for you.
+Description:
+    In it's current state, this application allows two players to player checkers against eacher other. The project is meant for novice C++ or programmers in general.
 
-This file contains a summary of what you will find in each of the files that
-make up your Checkers application.
-
-
-Checkers.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-Checkers.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
-
-Checkers.cpp
-    This is the main application source file.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named Checkers.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+Planned Features:
+    AI: I plan to implement a variation of the MiniMax algorithm for the AI.
+    
+Thanks again!
+- Tyler Crockett (Macdaddy4sure)

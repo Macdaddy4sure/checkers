@@ -1180,6 +1180,11 @@ void Player1(int Player)
 	int Destination[2] = { 0, 0 };
 	int *DestinationPointer = Destination;
 	int PlayerPiece;
+<<<<<<< HEAD
+=======
+	bool Capture = false;
+	bool *CapturePointer = &Capture;
+>>>>>>> origin/master
 	string input;
 
 	if (Player == black)
@@ -1259,4 +1264,8 @@ void Player2(int Player)
 
 	} while (ValidMove(Player, PlayerPiece, Source, Destination) != 1);
 	KingMe(PlayerPiece, Destination);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master

@@ -35,11 +35,11 @@ AI: I plan to implement a variation of the MiniMax algorithm for the AI.
             AI() - Will be invoked when it is the AI's turn, but for now serves as a stub.
             
     Extras.cpp:
-      This file is home to extra functions
-      Functions:
-        ResetBoard() - Sets the board to initial values, black on top, and white on bottom. (No pun intended)
-        PrintHeader() - Prints the program's header from Banner.txt
-        PrintBoard() - Prints the board and sets pieces.
+        This file is home to extra functions
+        Functions:
+            ResetBoard() - Sets the board to initial values, black on top, and white on bottom. (No pun intended)
+            PrintHeader() - Prints the program's header from Banner.txt
+            PrintBoard() - Prints the board and sets pieces.
         
     stdafx.h:
         Include file for standard system include files or project specific include files.

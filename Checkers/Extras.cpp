@@ -28,7 +28,7 @@ void ResetBoard()
 			for (int y = 1; y <= 8; ++y)
 			{
 				if ((y % 2) != 0)
-					_Board[x][y] = 1;
+					_Board[x][y] = black_checker;
 			}
 		}
 		else
@@ -36,7 +36,7 @@ void ResetBoard()
 			for (int y = 0; y < 8; ++y)
 			{
 				if ((y % 2) == 0 || y == 0)
-					_Board[x][y] = 1;
+					_Board[x][y] = black_checker;
 			}
 		}
 	}
@@ -49,7 +49,7 @@ void ResetBoard()
 			for (int y = 1; y <= 8; ++y)
 			{
 				if ((y % 2) != 0)
-					_Board[x][y] = 3;
+					_Board[x][y] = white_checker;
 			}
 		}
 		else
@@ -57,7 +57,7 @@ void ResetBoard()
 			for (int y = 0; y < 8; ++y)
 			{
 				if ((y % 2) == 0 || y == 0)
-					_Board[x][y] = 3;
+					_Board[x][y] = white_checker;
 			}
 		}
 	}
@@ -96,16 +96,16 @@ void PrintBoard()
 		{
 			switch (_Board[row][column])
 			{
-			case (1) :
+			case (black_checker) :
 				cout << 'b';
 				break;
-			case (2) :
+			case (black_king) :
 				cout << 'B';
 				break;
-			case (3) :
+			case (white_checker) :
 				cout << 'w';
 				break;
-			case (4) :
+			case (white_king) :
 				cout << 'W';
 				break;
 			default:

@@ -63,12 +63,14 @@ int main()
 		if (Player == black)
 		{
 			Player2(Player);
-			Player1(Player);
+			if (CheckWinner() == 3)
+				Player1(Player);
 		}
 		else
 		{
 			Player1(Player);
-			Player2(Player);
+			if (CheckWinner() == 3)
+				Player2(Player);
 		}
 	} while (CheckWinner() == 3);
 
